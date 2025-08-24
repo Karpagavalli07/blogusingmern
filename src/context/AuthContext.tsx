@@ -1,0 +1,77 @@
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import axios from "axios";
+import { getToken, saveToken, removeToken } from "../utils/auth";
+
+interface User {
+  username: string;
+  email: string;
+  profilePic?: string;
+}
+
+interface AuthContextType {
+  user: User | null;
+  isAuthenticated: boolean;
+  login: (token: string) => void;
+  logout: () => void;
+  loading: boolean;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const token = getToken();
+      if (token) {
+        login(token);
+      } else {
+        setUser(null);
+      }
+      setLoading(false);
+    };
+    checkUser();
+  }, []);
+
+  const login = (token: string) => {
+    saveToken(token); // save token in localStorage
+    // After saving, immediately fetch user
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/api/user/getUser`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => setUser(res.data))
+      .catch(() => setUser(null));
+  };
+
+  const logout = () => {
+    removeToken();
+    setUser(null);
+  };
+
+  const value: AuthContextType = {
+    user,
+    isAuthenticated: !!user,
+    login,
+    logout,
+    loading,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};

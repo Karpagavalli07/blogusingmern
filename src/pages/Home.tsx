@@ -1,56 +1,77 @@
 import React from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { isTokenValid, decodeToken, logout } from "../utils/auth";
+import { useAuth } from "../context/AuthContext";
+import "./Home.css";
 
 const Home: React.FC = () => {
-  const navigate = useNavigate();
-
-  if (!isTokenValid()) {
-    navigate("/login");
-  }
-
-  const token = localStorage.getItem("token");
-  const user = token ? decodeToken(token) : null;
+  const { user, isAuthenticated } = useAuth();
 
   // sample blog posts
   const blogs = [
-    { id: 1, title: "Getting Started with MERN", snippet: "Learn how to build full-stack apps with MongoDB, Express, React, and Node.js." },
-    { id: 2, title: "React Router Made Easy", snippet: "A quick guide to navigating between pages in React using React Router." },
-    { id: 3, title: "Mastering MongoDB", snippet: "Tips and tricks for managing data effectively with MongoDB Atlas." }
+    { id: 1, title: "Getting Started with MERN", snippet: "Learn how to build full-stack apps with MongoDB, Express, React, and Node.js.", author: "John Doe", date: "2024-01-15" },
+    { id: 2, title: "React Router Made Easy", snippet: "A quick guide to navigating between pages in React using React Router.", author: "Jane Smith", date: "2024-01-14" },
+    { id: 3, title: "Mastering MongoDB", snippet: "Tips and tricks for managing data effectively with MongoDB Atlas.", author: "Mike Johnson", date: "2024-01-13" }
   ];
 
   return (
-    <div>
-      {/* Navbar */}
-      <nav style={{ display: "flex", justifyContent: "space-between", padding: "10px", background: "#f4f4f4" }}>
-        <h3>My Blog</h3>
-        <div>
-          {user ? (
-            <>
-              <span style={{ marginRight: "15px" }}>Hi, {user.username}</span>
-              <button onClick={() => { logout(); navigate("/login"); }}>Logout</button>
-            </>
-          ) : (
-            <>
-              <Link to="/login" style={{ marginRight: "15px" }}>Login</Link>
-              <Link to="/register">Register</Link>
-            </>
+    <div className="home-container">
+      {/* Hero Section */}
+      {!isAuthenticated && <section className="hero-section">
+        <div className="hero-content">
+          <h1>Welcome to Victory Blog</h1>
+          <p>Discover amazing stories, share your thoughts, and connect with writers from around the world.</p>
+          {!isAuthenticated && (
+            <div className="hero-buttons">
+              <a href="/register" className="cta-button primary">Get Started</a>
+              <a href="/login" className="cta-button secondary">Sign In</a>
+            </div>
           )}
         </div>
-      </nav>
+      </section>}
 
       {/* Welcome Message */}
-      <h2 style={{ margin: "20px" }}>Welcome {user?.username || "Guest"} 👋</h2>
+      {isAuthenticated && (
+        <section className="welcome-section">
+          <h2>Welcome back, {user?.username}! 👋</h2>
+          <p>Ready to create your next blog post?</p>
+        </section>
+      )}
 
-      {/* Blog List */}
-      <div style={{ margin: "20px" }}>
-        {blogs.map((blog) => (
-          <div key={blog.id} style={{ border: "1px solid #ddd", padding: "15px", marginBottom: "10px", borderRadius: "8px" }}>
-            <h3>{blog.title}</h3>
-            <p>{blog.snippet}</p>
+      {/* Featured Blogs */}
+      <section className="blogs-section">
+        <div className="section-header">
+          <h2>Featured Posts</h2>
+          <p>Explore our latest and most popular articles</p>
+        </div>
+        
+        <div className="blogs-grid">
+          {blogs.map((blog) => (
+            <article key={blog.id} className="blog-card">
+              <div className="blog-content">
+                <h3 className="blog-title">{blog.title}</h3>
+                <p className="blog-snippet">{blog.snippet}</p>
+                <div className="blog-meta">
+                  <span className="blog-author">By {blog.author}</span>
+                  <span className="blog-date">{new Date(blog.date).toLocaleDateString()}</span>
+                </div>
+              </div>
+              <div className="blog-actions">
+                <button className="read-more-btn">Read More</button>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* Call to Action */}
+      {!isAuthenticated && (
+        <section className="cta-section">
+          <div className="cta-content">
+            <h2>Join Our Community</h2>
+            <p>Start writing, sharing, and connecting with other bloggers today.</p>
+            <a href="/register" className="cta-button primary">Create Account</a>
           </div>
-        ))}
-      </div>
+        </section>
+      )}
     </div>
   );
 };
