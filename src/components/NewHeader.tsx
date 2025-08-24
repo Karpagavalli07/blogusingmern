@@ -10,7 +10,8 @@ const NewHeader: React.FC = () => {
 
   useEffect(() => {
     if (user?.profilePic) {
-      setPreview(`${process.env.REACT_APP_BACKEND_URL}${user.profilePic}`);
+              const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+        setPreview(`${backendUrl}${user.profilePic}`);
     }
   }, [user]);
 
@@ -29,7 +30,10 @@ const NewHeader: React.FC = () => {
             <Link to="/" className="nav-link">Home</Link>
             <Link to="/about" className="nav-link">About</Link>
             {isAuthenticated && (
-              <Link to="/create-blog" className="nav-link">Create Blog</Link>
+              <>
+                <Link to="/create-blog" className="nav-link">Create Blog</Link>
+                <Link to="/my-blog" className="nav-link">My Blog</Link>
+              </>
             )}
           </nav>
         </div>

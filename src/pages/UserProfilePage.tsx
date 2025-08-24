@@ -13,7 +13,8 @@ const Profile: React.FC = () => {
 
   useEffect(() => {
     if (user?.profilePic) {
-      setPreview(`${process.env.REACT_APP_BACKEND_URL}${user.profilePic}`);
+              const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+        setPreview(`${backendUrl}${user.profilePic}`);
     }
   }, [user]);
 
@@ -42,7 +43,7 @@ const Profile: React.FC = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
-        `${process.env.REACT_APP_BACKEND_URL}/api/user/profile`,
+        `${process.env.REACT_APP_BACKEND_URL || "http://localhost:5000"}/api/user/profile`,
         formData,
         {
           headers: {

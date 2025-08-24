@@ -19,7 +19,8 @@ const Register: React.FC = () => {
     setError("");
     
     try {
-      const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/register`, {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+      const res = await axios.post(`${backendUrl}/api/register`, {
         username,
         email,
         password,

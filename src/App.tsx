@@ -9,6 +9,9 @@ import Login from "./pages/Login";
 import Main from "./Main";
 import CreateBlog from "./pages/CreateBlog";
 import Profile from "./pages/UserProfilePage";
+import MyBlog from "./pages/MyBlog";
+import BlogDetail from "./pages/BlogDetail";
+import EditBlog from "./pages/EditBlog";
 import "./App.css";
 
 interface PublicLayoutProps {
@@ -94,6 +97,34 @@ function App() {
               <PublicLayout>
                 <ProtectedRoute>
                   <CreateBlog />
+                </ProtectedRoute>
+              </PublicLayout>
+            }
+          />
+          <Route
+            path="/my-blog"
+            element={
+              <PublicLayout>
+                <ProtectedRoute>
+                  <MyBlog />
+                </ProtectedRoute>
+              </PublicLayout>
+            }
+          />
+          <Route
+            path="/blog/:id"
+            element={
+              <PublicLayout>
+                <BlogDetail />
+              </PublicLayout>
+            }
+          />
+          <Route
+            path="/edit-blog/:id"
+            element={
+              <PublicLayout>
+                <ProtectedRoute>
+                  <EditBlog />
                 </ProtectedRoute>
               </PublicLayout>
             }

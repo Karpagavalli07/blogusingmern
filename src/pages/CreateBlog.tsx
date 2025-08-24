@@ -40,7 +40,7 @@ const CreateBlog: React.FC = () => {
       }
 
       const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/api/blogs`, // ✅ fixed API URL
+        `${process.env.REACT_APP_BACKEND_URL || "http://localhost:5000"}/api/blogs`, // ✅ fixed API URL
         { title, snippet, description },
         {
           headers: { Authorization: `Bearer ${token}` },

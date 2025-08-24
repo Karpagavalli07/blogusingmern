@@ -18,7 +18,8 @@ const Login: React.FC = () => {
     setError("");
     
     try {
-      const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/login`, {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+      const res = await axios.post(`${backendUrl}/api/login`, {
         email,
         password,
       });

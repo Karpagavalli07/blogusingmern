@@ -3,7 +3,8 @@ import axios from "axios";
 import { getToken, saveToken, removeToken } from "../utils/auth";
 
 interface User {
-  id: string;
+  _id: string;
+  id?: string; // For compatibility with login response
   username: string;
   email: string;
   profilePic?: string;
@@ -51,14 +52,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = (token: string) => {
     saveToken(token); // save token in localStorage
     // After saving, immediately fetch user
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/api/user/getUser`, {
+      .get(`${backendUrl}/api/user/getUser`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((res) => setUser(res.data))
-      .catch(() => setUser(null));
+      .then((res) => {
+        // The getUser endpoint returns user with _id, but we need to ensure we have the right field
+        const userData = {
+          ...res.data,
+          id: res.data._id // Add id field for compatibility
+        };
+        setUser(userData);
+      })
+      .catch((err) => {
+        console.error("Error fetching user:", err);
+        setUser(null);
+      });
   };
 
   const logout = () => {
