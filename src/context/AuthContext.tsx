@@ -3,6 +3,7 @@ import axios from "axios";
 import { getToken, saveToken, removeToken } from "../utils/auth";
 
 interface User {
+  id: string;
   username: string;
   email: string;
   profilePic?: string;

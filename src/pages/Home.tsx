@@ -1,6 +1,7 @@
 import React from "react";
 import { useAuth } from "../context/AuthContext";
 import "./Home.css";
+import BlogsPage from "./BlogsPage";
 
 const Home: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
@@ -43,23 +44,7 @@ const Home: React.FC = () => {
           <p>Explore our latest and most popular articles</p>
         </div>
         
-        <div className="blogs-grid">
-          {blogs.map((blog) => (
-            <article key={blog.id} className="blog-card">
-              <div className="blog-content">
-                <h3 className="blog-title">{blog.title}</h3>
-                <p className="blog-snippet">{blog.snippet}</p>
-                <div className="blog-meta">
-                  <span className="blog-author">By {blog.author}</span>
-                  <span className="blog-date">{new Date(blog.date).toLocaleDateString()}</span>
-                </div>
-              </div>
-              <div className="blog-actions">
-                <button className="read-more-btn">Read More</button>
-              </div>
-            </article>
-          ))}
-        </div>
+        <BlogsPage />
       </section>
 
       {/* Call to Action */}

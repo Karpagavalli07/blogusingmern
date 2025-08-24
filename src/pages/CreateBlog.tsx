@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -14,7 +14,7 @@ const CreateBlog: React.FC = () => {
   const { isAuthenticated } = useAuth();
 
   // Redirect if not authenticated
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isAuthenticated) {
       navigate("/login");
     }
@@ -22,8 +22,14 @@ const CreateBlog: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError("");
+
+    if (!title.trim() || !snippet.trim() || !description.trim()) {
+      setError("All fields are mandatory!");
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const token = localStorage.getItem("token");
@@ -34,12 +40,14 @@ const CreateBlog: React.FC = () => {
       }
 
       const res = await axios.post(
-        `$${process.env.REACT_APP_BACKEND_URL}/api/blogs`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/blogs`, // ✅ fixed API URL
         { title, snippet, description },
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
 
-      alert(res.data.message);
+      alert(res.data.message || "Blog created successfully!");
       navigate("/main");
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to create blog");
@@ -48,15 +56,13 @@ const CreateBlog: React.FC = () => {
     }
   };
 
-  if (!isAuthenticated) {
-    return null; // Don't render while redirecting
-  }
+  if (!isAuthenticated) return null; // Don't render while redirecting
 
   return (
     <div className="create-blog-container">
       <div className="create-blog-card">
         <div className="create-blog-header">
-          <h2>Create New Blog Post</h2>
+          <h2>Create Blog</h2>
           <p>Share your thoughts with the world</p>
         </div>
 
@@ -71,8 +77,8 @@ const CreateBlog: React.FC = () => {
               placeholder="Enter a compelling title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              required
               className="form-input"
+              required
             />
           </div>
 
@@ -84,8 +90,8 @@ const CreateBlog: React.FC = () => {
               placeholder="A brief summary of your blog"
               value={snippet}
               onChange={(e) => setSnippet(e.target.value)}
-              required
               className="form-input"
+              required
             />
           </div>
 
@@ -96,9 +102,9 @@ const CreateBlog: React.FC = () => {
               placeholder="Write your blog content here..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              required
               className="form-textarea"
               rows={10}
+              required
             ></textarea>
           </div>
 
@@ -107,6 +113,7 @@ const CreateBlog: React.FC = () => {
               type="button"
               onClick={() => navigate("/main")}
               className="cancel-button"
+              disabled={loading}
             >
               Cancel
             </button>

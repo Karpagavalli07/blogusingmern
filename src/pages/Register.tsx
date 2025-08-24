@@ -53,6 +53,7 @@ const Register: React.FC = () => {
             <input
               id="username"
               type="text"
+              name="username"
               placeholder="Choose a username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
