@@ -57,7 +57,7 @@ const About: React.FC = () => {
             <div className="feature-item">
               <div className="feature-icon">🤝</div>
               <h3>Community</h3>
-              <p>Connect with writers and readers from around the world</p>
+              <p>Connect with winners and readers from around the world</p>
             </div>
           </div>
         </div>

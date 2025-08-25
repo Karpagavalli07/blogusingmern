@@ -19,7 +19,7 @@ const Home: React.FC = () => {
       {!isAuthenticated && <section className="hero-section">
         <div className="hero-content">
           <h1>Welcome to Victory Blog</h1>
-          <p>Discover amazing stories, share your thoughts, and connect with writers from around the world.</p>
+          <p>Discover amazing stories, share your thoughts, and connect with winners from around the world.</p>
           {!isAuthenticated && (
             <div className="hero-buttons">
               <a href="/register" className="cta-button primary">Get Started</a>

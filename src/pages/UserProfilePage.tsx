@@ -14,7 +14,7 @@ const Profile: React.FC = () => {
   useEffect(() => {
     if (user?.profilePic) {
               const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
-        setPreview(`${backendUrl}${user.profilePic}`);
+        setPreview(`${backendUrl}/${user.profilePic}`);
     }
   }, [user]);
 

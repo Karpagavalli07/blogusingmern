@@ -25,7 +25,7 @@ const BlogsPage: React.FC = () => {
   const getAuthorImage = (author: any) => {
     if (!author?.profilePic) return null;
     const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
-    return `${backendUrl}${author.profilePic}`;
+    return `${backendUrl}/${author.profilePic}`;
   };
 
   useEffect(() => {

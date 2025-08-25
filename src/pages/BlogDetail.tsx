@@ -47,7 +47,7 @@ const BlogDetail: React.FC = () => {
           <div className="author-info">
             {blog.author?.profilePic ? (
               <img
-                src={`${process.env.REACT_APP_BACKEND_URL || "http://localhost:5000"}${blog.author.profilePic}`}
+                src={`${process.env.REACT_APP_BACKEND_URL || "http://localhost:5000"}/${blog.author.profilePic}`}
                 alt={blog.author.username}
                 className="author-avatar"
               />
